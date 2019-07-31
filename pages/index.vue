@@ -14,35 +14,45 @@ export default {
   components: {
     PostList
   },
-  asyncData(context, callback) {
-    console.log('asyncData');
-    setTimeout(() => {
-      callback(null, {
-        loadedPosts: [
-          {
-            id: "1",
-            title: "First post",
-            previewText: "This is our first post!",
-            thumbnail:
-              "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-          },
-          {
-            id: "2",
-            title: "Second post",
-            previewText: "This is our second post!",
-            thumbnail:
-              "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-          },
-          {
-            id: "3",
-            title: "Third post",
-            previewText: "This is our third post!",
-            thumbnail:
-              "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-          }
-        ]
+  asyncData(context) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({
+          loadedPosts: [
+            {
+              id: "1",
+              title: "First post",
+              previewText: "This is our first post!",
+              thumbnail:
+                "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+            },
+            {
+              id: "2",
+              title: "Second post",
+              previewText: "This is our second post!",
+              thumbnail:
+                "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+            },
+            {
+              id: "3",
+              title: "Third post",
+              previewText: "This is our third post!",
+              thumbnail:
+                "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+            }
+          ]
+        });
+      }, 2000);
+    })
+      .then(res => {
+        return res;
+      })
+      .catch(e => {
+        context.error(new Error());
       });
-    }, 2000);
+  },
+  created() {
+    this.$store.dispatch('setLoadedPosts', this.loadedPosts);
   },
   data() {
     return {
