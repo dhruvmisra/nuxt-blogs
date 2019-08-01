@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const state = () => {
   loadedPosts: []
 }
@@ -11,41 +13,51 @@ export const getters = {
 export const mutations = {
   set_loaded_posts(state, posts) {
     state.loadedPosts = posts;
+  },
+  add_post(state, newPost) {
+    state.loadedPosts.push(newPost);
+  },
+  edit_post(state, editedPost) {
+    const postIndex = state.loadedPosts.findIndex(post => {
+      return post.id == editedPost.id;
+    });
+
+    state.loadedPosts[postIndex] = editedPost;
   }
 }
 
 export const actions = {
   nuxtServerInit(vuexContext, context) {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        vuexContext.commit('set_loaded_posts', [
-            {
-              id: "1",
-              title: "First post",
-              previewText: "This is our first post!",
-              thumbnail:
-                "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-            },
-            {
-              id: "2",
-              title: "Second post",
-              previewText: "This is our second post!",
-              thumbnail:
-                "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-            },
-            {
-              id: "3",
-              title: "Third post",
-              previewText: "This is our third post!",
-              thumbnail:
-                "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+      axios.get('https://nuxt-blogs-18fe0.firebaseio.com/posts.json')
+        .then(res => {
+          for(let key in res.data) {
+            let posts = [];
+            for(let key in res.data) {
+              posts.push({ ...res.data[key], id: key });
             }
-          ]);
-        resolve();
-      }, 2000);
+            vuexContext.commit('set_loaded_posts', posts);
+            resolve();
+          }
+        });
+
     })
   },
   setLoadedPosts({ commit }, posts) {
     commit('set_loaded_posts', posts);
-  }
+  },
+  addPost({commit}, newPost) {
+    return axios.post('https://nuxt-blogs-18fe0.firebaseio.com/posts.json', newPost)
+      .then(res => {
+        commit('add_post', { ...newPost, id: res.data.name });
+      })
+      .catch(e => console.log(e));
+  },
+  editPost({commit}, editedPost) {
+    return axios.put('https://nuxt-blogs-18fe0.firebaseio.com/posts/' + editedPost.id + '.json', editedPost)
+      .then(res => {
+        commit('edit_post', editedPost);
+      })
+      .catch(e => console.log(e));
+  },
 }
