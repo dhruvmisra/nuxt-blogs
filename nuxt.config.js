@@ -29,7 +29,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/ui-components.js'
+    '@/plugins/ui-components.js',
+    '@/plugins/date-filter.js'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -42,7 +43,11 @@ export default {
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
     'bootstrap-vue/nuxt',
+    '@nuxtjs/axios'
   ],
+  axios: {
+    baseURL: process.env.BASE_URL || 'https://nuxt-blogs-18fe0.firebaseio.com'
+  },
   /*
   ** Build configuration
   */
