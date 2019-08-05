@@ -46,7 +46,11 @@ export default {
     '@nuxtjs/axios'
   ],
   axios: {
-    baseURL: process.env.BASE_URL || 'https://nuxt-blogs-18fe0.firebaseio.com'
+    baseURL: process.env.BASE_URL || 'https://nuxt-blogs-18fe0.firebaseio.com',
+  },
+
+  env: {
+    APIKey: 'AIzaSyCtgTNWirHQXcT9q3ks8QrSX4uG1pmll78'
   },
   /*
   ** Build configuration
@@ -57,8 +61,5 @@ export default {
     */
     extend(config, ctx) {
     }
-  },
-  router: {
-    middleware: 'log'
   }
 }

@@ -11,11 +11,12 @@ import AdminPostForm from '@/components/Admin/AdminPostForm';
 
 export default {
   layout: 'admin',
+  middleware: ['check-auth', 'auth'],
   components: {
     AdminPostForm
   },
   asyncData(context) {
-    return context.app.$axios.$get('https://nuxt-blogs-18fe0.firebaseio.com/posts/' + context.params.postId + '.json')
+    return context.app.$axios.$get('/posts/' + context.params.postId + '.json')
       .then(data => {
         return {
           loadedPost: { ...data, id: context.params.postId }
