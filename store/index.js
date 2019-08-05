@@ -115,5 +115,14 @@ export const actions = {
       return;
     }
     vuexContext.commit('setToken', token);
+  },
+  logout(vuexContext) {
+    vuexContext.commit('clearToken');
+    Cookie.remove('token');
+    Cookie.remove('tokenExpiration');
+    if(process.client) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('tokenExpiration');
+    }
   }
 }
